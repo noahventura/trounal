@@ -1,0 +1,170 @@
+.trade-calendar-container {
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 16px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.react-calendar {
+  width: 100%;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  color: #e2e8f0;
+}
+
+.react-calendar__navigation {
+  margin-bottom: 1rem;
+}
+
+.react-calendar__navigation button {
+  color: #3b82f6;
+  font-size: 1.2rem;
+  font-weight: 600;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 8px;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
+}
+
+.react-calendar__month-view__weekdays {
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+}
+
+.react-calendar__tile {
+  background: rgba(30, 41, 59, 0.5);
+  color: #cbd5e1;
+  border: 1px solid rgba(71, 85, 105, 0.3);
+  border-radius: 8px;
+  padding: 1rem 0.5rem;
+  margin: 2px;
+  transition: all 0.3s ease;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
+}
+
+.react-calendar__tile--now {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: #3b82f6;
+}
+
+.react-calendar__tile--active {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: #3b82f6;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+}
+
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  background: rgba(59, 130, 246, 0.4);
+}
+
+.trade-indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+  width: 100%;
+}
+
+.trade-dot {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.trade-dot.win {
+  background: rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+  border: 1px solid #22c55e;
+}
+
+.trade-dot.loss {
+  background: rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  border: 1px solid #ef4444;
+}
+
+.trade-dot.breakeven {
+  background: rgba(234, 179, 8, 0.3);
+  color: #fbbf24;
+  border: 1px solid #eab308;
+}
+
+.trade-count {
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 700;
+  width: 100%;
+}
+
+.trade-count.profit {
+  background: rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+  border: 1px solid #22c55e;
+}
+
+.trade-count.loss {
+  background: rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  border: 1px solid #ef4444;
+}
+
+.month-label-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.month-label {
+  font-size: 1.1rem;
+}
+
+.monthly-pnl {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.monthly-pnl.monthly-profit {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border: 1px solid #22c55e;
+}
+
+.monthly-pnl.monthly-loss {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid #ef4444;
+}
