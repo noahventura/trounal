@@ -10,6 +10,7 @@ export default function FeedbackButton() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAdminView, setIsAdminView] = useState(false);
   const [feedbackType, setFeedbackType] = useState('feature');
+  const [adminFilter, setAdminFilter] = useState('all');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -72,7 +73,13 @@ export default function FeedbackButton() {
     setIsModalOpen(false);
     setIsAdminView(false);
     setSubmitSuccess(false);
+    setAdminFilter('all');
   };
+
+  const filteredFeedback = allFeedback.filter(item => {
+    if (adminFilter === 'all') return true;
+    return item.type === adminFilter;
+  });
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -167,7 +174,7 @@ export default function FeedbackButton() {
                     className="admin-view-btn"
                     onClick={() => setIsAdminView(true)}
                   >
-                    View All Feedback
+                    View Bugs & Feature Requests
                   </button>
                 )}
               </>
@@ -180,11 +187,32 @@ export default function FeedbackButton() {
                   <h2>All Feedback</h2>
                 </div>
 
+                <div className="admin-filter-tabs">
+                  <button
+                    className={`filter-tab ${adminFilter === 'all' ? 'active' : ''}`}
+                    onClick={() => setAdminFilter('all')}
+                  >
+                    All ({allFeedback.length})
+                  </button>
+                  <button
+                    className={`filter-tab ${adminFilter === 'feature' ? 'active' : ''}`}
+                    onClick={() => setAdminFilter('feature')}
+                  >
+                    Features ({allFeedback.filter(f => f.type === 'feature').length})
+                  </button>
+                  <button
+                    className={`filter-tab ${adminFilter === 'bug' ? 'active' : ''}`}
+                    onClick={() => setAdminFilter('bug')}
+                  >
+                    Bugs ({allFeedback.filter(f => f.type === 'bug').length})
+                  </button>
+                </div>
+
                 <div className="feedback-list">
-                  {allFeedback.length === 0 ? (
+                  {filteredFeedback.length === 0 ? (
                     <p className="no-feedback">No feedback submitted yet.</p>
                   ) : (
-                    allFeedback.map((item) => (
+                    filteredFeedback.map((item) => (
                       <div key={item.id} className="feedback-item">
                         <div className="feedback-item-header">
                           <span className={`feedback-type-badge ${item.type}`}>
