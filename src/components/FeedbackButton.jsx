@@ -32,7 +32,7 @@ export default function FeedbackButton() {
 
     setIsSubmitting(true);
     try {
-      await addFeedback(currentUser.uid, currentUser.email, {
+      await addFeedback(currentUser.uid, currentUser.email, currentUser.displayName, {
         type: feedbackType,
         title: title.trim(),
         description: description.trim()
@@ -228,7 +228,7 @@ export default function FeedbackButton() {
                         <h3>{item.title}</h3>
                         <p className="feedback-description">{item.description}</p>
                         <div className="feedback-meta">
-                          <span>{item.userEmail}</span>
+                          <span>{item.userName || 'Unknown'} ({item.userEmail})</span>
                           <span>{item.createdAt.toLocaleDateString()}</span>
                         </div>
                         <div className="feedback-actions">
@@ -244,8 +244,11 @@ export default function FeedbackButton() {
                           <button
                             className="delete-btn"
                             onClick={() => handleDelete(item.id)}
+                            title="Delete"
                           >
-                            Delete
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="24" height="24">
+                              <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6" />
+                            </svg>
                           </button>
                         </div>
                       </div>

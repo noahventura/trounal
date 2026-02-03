@@ -336,14 +336,18 @@
 }
 
 .feedback-actions .delete-btn {
-  padding: 0.5rem 0.75rem;
+  padding: 0.4rem;
   background: rgba(239, 68, 68, 0.2);
   border: 1px solid rgba(239, 68, 68, 0.3);
   border-radius: 4px;
   color: #ef4444;
-  font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
 }
 
 .feedback-actions .delete-btn:hover {

@@ -8,8 +8,7 @@ import {
   where,
   orderBy,
   onSnapshot,
-  Timestamp,
-  getDocs
+  Timestamp
 } from 'firebase/firestore';
 import { db } from './config';
 
@@ -116,10 +115,11 @@ export async function updateChecklistOrder(items) {
 
 // FEEDBACK
 
-export async function addFeedback(userId, userEmail, feedback) {
+export async function addFeedback(userId, userEmail, userName, feedback) {
   const feedbackData = {
     userId,
     userEmail,
+    userName: userName || 'Unknown',
     type: feedback.type, // 'feature' or 'bug'
     title: feedback.title,
     description: feedback.description,
