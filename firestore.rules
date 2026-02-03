@@ -1,6 +1,11 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Replace with your admin email address
+    function isAdmin() {
+      return request.auth.token.email == 'mw3.noah@gmail.com';
+    }
+
     match /trades/{tradeId} {
       allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
       allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
@@ -8,6 +13,12 @@ service cloud.firestore {
     match /checklists/{itemId} {
       allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
       allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+    }
+    match /feedback/{feedbackId} {
+      // Any authenticated user can submit feedback
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      // Only admin can read all feedback, update status, or delete
+      allow read, update, delete: if request.auth != null && isAdmin();
     }
   }
 }

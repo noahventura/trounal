@@ -8,12 +8,14 @@ import {
   where,
   orderBy,
   onSnapshot,
-  Timestamp
+  Timestamp,
+  getDocs
 } from 'firebase/firestore';
 import { db } from './config';
 
 const TRADES_COLLECTION = 'trades';
 const CHECKLIST_COLLECTION = 'checklists';
+const FEEDBACK_COLLECTION = 'feedback';
 
 // Convert Firestore timestamp to JS Date
 const convertTimestamp = (trade) => ({
@@ -110,4 +112,47 @@ export async function updateChecklistOrder(items) {
     return updateDoc(itemRef, { order: index });
   });
   await Promise.all(updates);
+}
+
+// FEEDBACK
+
+export async function addFeedback(userId, userEmail, feedback) {
+  const feedbackData = {
+    userId,
+    userEmail,
+    type: feedback.type, // 'feature' or 'bug'
+    title: feedback.title,
+    description: feedback.description,
+    status: 'pending',
+    createdAt: Timestamp.now()
+  };
+
+  const docRef = await addDoc(collection(db, FEEDBACK_COLLECTION), feedbackData);
+  return docRef.id;
+}
+
+export function subscribeToAllFeedback(callback) {
+  const q = query(
+    collection(db, FEEDBACK_COLLECTION),
+    orderBy('createdAt', 'desc')
+  );
+
+  return onSnapshot(q, (snapshot) => {
+    const items = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate() : new Date()
+    }));
+    callback(items);
+  });
+}
+
+export async function updateFeedbackStatus(feedbackId, status) {
+  const feedbackRef = doc(db, FEEDBACK_COLLECTION, feedbackId);
+  await updateDoc(feedbackRef, { status });
+}
+
+export async function deleteFeedback(feedbackId) {
+  const feedbackRef = doc(db, FEEDBACK_COLLECTION, feedbackId);
+  await deleteDoc(feedbackRef);
 }

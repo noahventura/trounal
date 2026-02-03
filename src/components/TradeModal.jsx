@@ -1,13 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../firebase/AuthContext';
-import { uploadScreenshot } from '../firebase/storageService';
 import './TradeModal.css';
 
 function TradeModal({ isOpen, onClose, date, trades, onDeleteTrade, onUpdateTrade }) {
-  const { currentUser } = useAuth();
   const [selectedTrade, setSelectedTrade] = useState(null);
-  const [screenshotPreview, setScreenshotPreview] = useState(null);
-  const [screenshotFile, setScreenshotFile] = useState(null);
   const [comments, setComments] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
@@ -16,8 +11,6 @@ function TradeModal({ isOpen, onClose, date, trades, onDeleteTrade, onUpdateTrad
   useEffect(() => {
     if (isOpen) {
       setSelectedTrade(null);
-      setScreenshotPreview(null);
-      setScreenshotFile(null);
       setComments('');
       setHasChanges(false);
     }
@@ -35,22 +28,7 @@ function TradeModal({ isOpen, onClose, date, trades, onDeleteTrade, onUpdateTrad
   const handleTradeClick = (trade) => {
     setSelectedTrade(trade);
     setComments(trade.comments || '');
-    setScreenshotPreview(trade.screenshotURL || null);
-    setScreenshotFile(null);
     setHasChanges(false);
-  };
-
-  const handleScreenshotUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Store the file for later upload
-      setScreenshotFile(file);
-
-      // Create preview URL
-      const previewURL = URL.createObjectURL(file);
-      setScreenshotPreview(previewURL);
-      setHasChanges(true);
-    }
   };
 
   const handleCommentsChange = (e) => {
@@ -59,28 +37,11 @@ function TradeModal({ isOpen, onClose, date, trades, onDeleteTrade, onUpdateTrad
   };
 
   const handleSave = async () => {
-    if (!selectedTrade || !onUpdateTrade || !currentUser) return;
+    if (!selectedTrade || !onUpdateTrade) return;
 
     setIsSaving(true);
     try {
-      let screenshotURL = selectedTrade.screenshotURL;
-
-      // If there's a new file, upload it to Storage
-      if (screenshotFile) {
-        screenshotURL = await uploadScreenshot(
-          currentUser.uid,
-          selectedTrade.id,
-          screenshotFile
-        );
-      }
-
-      await onUpdateTrade(selectedTrade.id, {
-        comments,
-        screenshotURL
-      });
-
-      // Update local state
-      setScreenshotFile(null);
+      await onUpdateTrade(selectedTrade.id, { comments });
       setHasChanges(false);
     } catch (error) {
       console.error('Error saving trade:', error);
@@ -113,13 +74,7 @@ function TradeModal({ isOpen, onClose, date, trades, onDeleteTrade, onUpdateTrad
         return;
       }
     }
-    // Clean up preview URL if it was created locally
-    if (screenshotFile && screenshotPreview) {
-      URL.revokeObjectURL(screenshotPreview);
-    }
     setSelectedTrade(null);
-    setScreenshotPreview(null);
-    setScreenshotFile(null);
     setComments('');
     setHasChanges(false);
   };
@@ -198,25 +153,6 @@ function TradeModal({ isOpen, onClose, date, trades, onDeleteTrade, onUpdateTrad
               </div>
             </div>
 
-            <div className="screenshot-section">
-              <label className="section-label">Screenshot</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleScreenshotUpload}
-                className="file-input"
-                id="screenshot-upload"
-              />
-              <label htmlFor="screenshot-upload" className="upload-btn">
-                {screenshotPreview ? 'Change Screenshot' : 'Upload Screenshot'}
-              </label>
-              {screenshotPreview && (
-                <div className="screenshot-preview">
-                  <img src={screenshotPreview} alt="Trade screenshot" />
-                </div>
-              )}
-            </div>
-
             <div className="comments-section">
               <label className="section-label">Comments</label>
               <textarea
@@ -233,7 +169,7 @@ function TradeModal({ isOpen, onClose, date, trades, onDeleteTrade, onUpdateTrad
               onClick={handleSave}
               disabled={!hasChanges || isSaving}
             >
-              {isSaving ? 'Uploading...' : hasChanges ? 'Save Changes' : 'Saved'}
+              {isSaving ? 'Saving...' : hasChanges ? 'Save Changes' : 'Saved'}
             </button>
           </div>
         )}

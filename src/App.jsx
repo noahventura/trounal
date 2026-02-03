@@ -7,6 +7,7 @@ import TradeCalendar from './components/TradeCalendar';
 import PositionCalculator from './components/PositionCalculator';
 import TradeModal from './components/TradeModal';
 import AddTradeModal from './components/AddTradeModal';
+import FeedbackButton from './components/FeedbackButton';
 import Login from './components/Login';
 import './App.css';
 
@@ -119,6 +120,7 @@ function App() {
         onClose={() => setAddTradeModalOpen(false)}
         onAddTrade={handleAddTrade}
       />
+      <FeedbackButton />
     </div>
   );
 }
