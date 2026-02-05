@@ -4,6 +4,9 @@ import './TradeModal.css';
 function TradeModal({ isOpen, onClose, date, trades, onDeleteTrade, onUpdateTrade }) {
   const [selectedTrade, setSelectedTrade] = useState(null);
   const [comments, setComments] = useState('');
+  const [swap, setSwap] = useState('');
+  const [commission, setCommission] = useState('');
+  const [manualPnL, setManualPnL] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -28,6 +31,9 @@ function TradeModal({ isOpen, onClose, date, trades, onDeleteTrade, onUpdateTrad
   const handleTradeClick = (trade) => {
     setSelectedTrade(trade);
     setComments(trade.comments || '');
+    setSwap(trade.swap?.toString() || '');
+    setCommission(trade.commission?.toString() || '');
+    setManualPnL(trade.pnl?.toString() || '');
     setHasChanges(false);
   };
 
@@ -36,12 +42,34 @@ function TradeModal({ isOpen, onClose, date, trades, onDeleteTrade, onUpdateTrad
     setHasChanges(true);
   };
 
+  const handleSwapChange = (e) => {
+    setSwap(e.target.value);
+    setHasChanges(true);
+  };
+
+  const handleCommissionChange = (e) => {
+    setCommission(e.target.value);
+    setHasChanges(true);
+  };
+
+  const handlePnLChange = (e) => {
+    setManualPnL(e.target.value);
+    setHasChanges(true);
+  };
+
   const handleSave = async () => {
     if (!selectedTrade || !onUpdateTrade) return;
 
     setIsSaving(true);
     try {
-      await onUpdateTrade(selectedTrade.id, { comments });
+      const pnlValue = parseFloat(manualPnL) || 0;
+      await onUpdateTrade(selectedTrade.id, {
+        comments,
+        swap: parseFloat(swap) || 0,
+        commission: parseFloat(commission) || 0,
+        pnl: pnlValue,
+        type: pnlValue >= 0 ? 'win' : 'loss'
+      });
       setHasChanges(false);
     } catch (error) {
       console.error('Error saving trade:', error);
@@ -76,7 +104,15 @@ function TradeModal({ isOpen, onClose, date, trades, onDeleteTrade, onUpdateTrad
     }
     setSelectedTrade(null);
     setComments('');
+    setSwap('');
+    setCommission('');
+    setManualPnL('');
     setHasChanges(false);
+  };
+
+  const handleFieldChange = (setter) => (e) => {
+    setter(e.target.value);
+    setHasChanges(true);
   };
 
   const totalPnL = trades.reduce((sum, trade) => sum + (trade.pnl || 0), 0);
@@ -145,11 +181,45 @@ function TradeModal({ isOpen, onClose, date, trades, onDeleteTrade, onUpdateTrad
                 <label>Lot Size</label>
                 <span>{selectedTrade.lotSize || 'N/A'}</span>
               </div>
-              <div className="detail-item">
-                <label>P&L</label>
-                <span className={selectedTrade.pnl >= 0 ? 'profit-text' : 'loss-text'}>
-                  {selectedTrade.pnl >= 0 ? '+' : ''}${selectedTrade.pnl}
-                </span>
+            </div>
+
+            <div className="editable-section">
+              <label className="section-label">Fees & Final P&L</label>
+              <div className="editable-grid">
+                <div className="editable-item">
+                  <label>Swap ($)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={swap}
+                    onChange={handleSwapChange}
+                    placeholder="0.00"
+                    className="edit-input"
+                  />
+                </div>
+                <div className="editable-item">
+                  <label>Commission ($)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={commission}
+                    onChange={handleCommissionChange}
+                    placeholder="0.00"
+                    className="edit-input"
+                  />
+                </div>
+                <div className="editable-item full-width">
+                  <label>Final P&L ($)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={manualPnL}
+                    onChange={handlePnLChange}
+                    placeholder="0.00"
+                    className={`edit-input pnl-input ${parseFloat(manualPnL) >= 0 ? 'profit' : 'loss'}`}
+                  />
+                  <span className="pnl-hint">Adjust if the calculated P&L differs from your broker</span>
+                </div>
               </div>
             </div>
 

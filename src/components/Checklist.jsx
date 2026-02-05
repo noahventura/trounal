@@ -13,9 +13,9 @@ function Checklist() {
   const { currentUser } = useAuth();
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState('');
-  const [draggedItem, setDraggedItem] = useState(null);
-  const [dragOverItem, setDragOverItem] = useState(null);
-  const dragNode = useRef(null);
+  const [draggedIndex, setDraggedIndex] = useState(null);
+  const [dragOverIndex, setDragOverIndex] = useState(null);
+  const draggedIndexRef = useRef(null);
 
   // Subscribe to user's checklist from Firestore
   useEffect(() => {
@@ -61,9 +61,10 @@ function Checklist() {
   };
 
   const handleDragStart = (e, index) => {
-    setDraggedItem(index);
-    dragNode.current = e.target;
-    dragNode.current.addEventListener('dragend', handleDragEnd);
+    setDraggedIndex(index);
+    draggedIndexRef.current = index;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', index.toString());
 
     setTimeout(() => {
       e.target.classList.add('dragging');
@@ -71,23 +72,35 @@ function Checklist() {
   };
 
   const handleDragEnter = (e, index) => {
-    if (index !== draggedItem) {
-      setDragOverItem(index);
+    e.preventDefault();
+    if (draggedIndexRef.current !== null && index !== draggedIndexRef.current) {
+      setDragOverIndex(index);
     }
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
   };
 
-  const handleDragEnd = async () => {
-    if (draggedItem !== null && dragOverItem !== null && draggedItem !== dragOverItem) {
+  const handleDragLeave = (e) => {
+    // Only clear if we're leaving the item entirely
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setDragOverIndex(null);
+    }
+  };
+
+  const handleDrop = async (e, dropIndex) => {
+    e.preventDefault();
+    const dragIndex = draggedIndexRef.current;
+
+    if (dragIndex !== null && dragIndex !== dropIndex) {
       const newItems = [...items];
-      const draggedItemContent = newItems[draggedItem];
+      const draggedItem = newItems[dragIndex];
 
       // Remove dragged item and insert at new position
-      newItems.splice(draggedItem, 1);
-      newItems.splice(dragOverItem, 0, draggedItemContent);
+      newItems.splice(dragIndex, 1);
+      newItems.splice(dropIndex, 0, draggedItem);
 
       // Update local state immediately for smooth UX
       setItems(newItems);
@@ -100,14 +113,17 @@ function Checklist() {
       }
     }
 
-    if (dragNode.current) {
-      dragNode.current.classList.remove('dragging');
-      dragNode.current.removeEventListener('dragend', handleDragEnd);
-    }
+    // Clean up
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+    draggedIndexRef.current = null;
+  };
 
-    setDraggedItem(null);
-    setDragOverItem(null);
-    dragNode.current = null;
+  const handleDragEnd = (e) => {
+    e.target.classList.remove('dragging');
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+    draggedIndexRef.current = null;
   };
 
   return (
@@ -130,11 +146,14 @@ function Checklist() {
           items.map((item, index) => (
             <div
               key={item.id}
-              className={`checklist-item ${dragOverItem === index ? 'drag-over' : ''}`}
+              className={`checklist-item ${dragOverIndex === index ? 'drag-over' : ''}`}
               draggable
               onDragStart={(e) => handleDragStart(e, index)}
               onDragEnter={(e) => handleDragEnter(e, index)}
               onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, index)}
+              onDragEnd={handleDragEnd}
             >
               <span className="drag-handle">⋮⋮</span>
               <label className="checkbox-container">

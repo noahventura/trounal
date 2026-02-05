@@ -56,6 +56,44 @@ select.form-input {
   cursor: pointer;
 }
 
+.add-fees-btn {
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px dashed rgba(71, 85, 105, 0.5);
+  border-radius: 8px;
+  color: #64748b;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-fees-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.fees-row {
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pnl-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 .calculated-pnl {
   display: flex;
   justify-content: space-between;
@@ -64,6 +102,62 @@ select.form-input {
   background: rgba(30, 41, 59, 0.5);
   border-radius: 12px;
   border: 1px solid rgba(71, 85, 105, 0.3);
+}
+
+.override-btn {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  border-radius: 6px;
+  color: #64748b;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+}
+
+.override-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.manual-pnl-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 8px;
+  animation: fadeIn 0.2s ease;
+}
+
+.manual-pnl-row label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.manual-pnl-input {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.manual-pnl-input.profit {
+  border-color: rgba(34, 197, 94, 0.5);
+  color: #22c55e;
+}
+
+.manual-pnl-input.loss {
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #ef4444;
+}
+
+.pnl-hint {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-style: italic;
 }
 
 .pnl-label {

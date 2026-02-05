@@ -3,7 +3,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // Replace with your admin email address
     function isAdmin() {
-      return request.auth.token.email == 'mw3.noah@gmail.com';
+      return request.auth.token.email == 'mw3.noah@gmail.comiii';
     }
 
     match /trades/{tradeId} {

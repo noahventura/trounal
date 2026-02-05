@@ -9,6 +9,11 @@ function AddTradeModal({ isOpen, onClose, onAddTrade }) {
   const [exit, setExit] = useState('');
   const [lotSize, setLotSize] = useState('');
   const [calculatedPnL, setCalculatedPnL] = useState(null);
+  const [showFees, setShowFees] = useState(false);
+  const [swap, setSwap] = useState('');
+  const [commission, setCommission] = useState('');
+  const [manualPnL, setManualPnL] = useState('');
+  const [useManualPnL, setUseManualPnL] = useState(false);
 
   const forexPairs = [
     'EUR/USD', 'GBP/USD', 'USD/JPY', 'USD/CHF',
@@ -67,13 +72,18 @@ function AddTradeModal({ isOpen, onClose, onAddTrade }) {
       }
 
       // Calculate P&L in USD
-      const pnl = pips * pipValue * lots;
+      let pnl = pips * pipValue * lots;
+
+      // Subtract swap and commission (they reduce profit / increase loss)
+      const swapValue = parseFloat(swap) || 0;
+      const commissionValue = parseFloat(commission) || 0;
+      pnl = pnl - swapValue - commissionValue;
 
       setCalculatedPnL(pnl);
     } else {
       setCalculatedPnL(null);
     }
-  }, [entry, exit, lotSize, pair, direction]);
+  }, [entry, exit, lotSize, pair, direction, swap, commission]);
 
   // Set default date to today when modal opens
   useEffect(() => {
@@ -86,6 +96,11 @@ function AddTradeModal({ isOpen, onClose, onAddTrade }) {
       setExit('');
       setLotSize('');
       setCalculatedPnL(null);
+      setShowFees(false);
+      setSwap('');
+      setCommission('');
+      setManualPnL('');
+      setUseManualPnL(false);
     }
   }, [isOpen]);
 
@@ -100,8 +115,13 @@ function AddTradeModal({ isOpen, onClose, onAddTrade }) {
       return;
     }
 
-    if (calculatedPnL === null) {
-      alert('Unable to calculate P&L. Please check your inputs.');
+    // Determine final P&L
+    const finalPnL = useManualPnL && manualPnL !== ''
+      ? parseFloat(manualPnL)
+      : calculatedPnL;
+
+    if (finalPnL === null || isNaN(finalPnL)) {
+      alert('Unable to determine P&L. Please check your inputs or enter a manual value.');
       return;
     }
 
@@ -116,8 +136,10 @@ function AddTradeModal({ isOpen, onClose, onAddTrade }) {
       entry,
       exit,
       lotSize,
-      pnl: parseFloat(calculatedPnL.toFixed(2)),
-      type: calculatedPnL >= 0 ? 'win' : 'loss',
+      swap: parseFloat(swap) || 0,
+      commission: parseFloat(commission) || 0,
+      pnl: parseFloat(finalPnL.toFixed(2)),
+      type: finalPnL >= 0 ? 'win' : 'loss',
       comments: ''
     };
 
@@ -219,12 +241,72 @@ function AddTradeModal({ isOpen, onClose, onAddTrade }) {
             </div>
           </div>
 
+          {!showFees ? (
+            <button
+              type="button"
+              className="add-fees-btn"
+              onClick={() => setShowFees(true)}
+            >
+              + Add Swap/Commission
+            </button>
+          ) : (
+            <div className="form-row fees-row">
+              <div className="form-group">
+                <label>Swap ($)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={swap}
+                  onChange={(e) => setSwap(e.target.value)}
+                  placeholder="0.00"
+                  className="form-input"
+                />
+              </div>
+              <div className="form-group">
+                <label>Commission ($)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={commission}
+                  onChange={(e) => setCommission(e.target.value)}
+                  placeholder="0.00"
+                  className="form-input"
+                />
+              </div>
+            </div>
+          )}
+
           {calculatedPnL !== null && (
-            <div className="calculated-pnl">
-              <span className="pnl-label">Calculated P&L:</span>
-              <span className={`pnl-value ${calculatedPnL >= 0 ? 'profit' : 'loss'}`}>
-                {calculatedPnL >= 0 ? '+' : ''}${calculatedPnL.toFixed(2)}
-              </span>
+            <div className="pnl-section">
+              <div className="calculated-pnl">
+                <span className="pnl-label">Calculated P&L:</span>
+                <span className={`pnl-value ${calculatedPnL >= 0 ? 'profit' : 'loss'}`}>
+                  {calculatedPnL >= 0 ? '+' : ''}${calculatedPnL.toFixed(2)}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                className="override-btn"
+                onClick={() => setUseManualPnL(!useManualPnL)}
+              >
+                {useManualPnL ? '× Use Calculated' : '✎ Override P&L'}
+              </button>
+
+              {useManualPnL && (
+                <div className="manual-pnl-row">
+                  <label>Final P&L ($)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={manualPnL}
+                    onChange={(e) => setManualPnL(e.target.value)}
+                    placeholder={calculatedPnL.toFixed(2)}
+                    className={`form-input manual-pnl-input ${parseFloat(manualPnL) >= 0 ? 'profit' : 'loss'}`}
+                  />
+                  <span className="pnl-hint">Enter the exact P&L from your broker</span>
+                </div>
+              )}
             </div>
           )}
 
