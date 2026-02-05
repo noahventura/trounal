@@ -104,7 +104,7 @@ export default function FeedbackButton() {
       </button>
 
       {isModalOpen && (
-        <div className="feedback-overlay" onClick={closeModal}>
+        <div className="feedback-overlay">
           <div className="feedback-modal" onClick={(e) => e.stopPropagation()}>
             <button className="feedback-close" onClick={closeModal}>×</button>
 

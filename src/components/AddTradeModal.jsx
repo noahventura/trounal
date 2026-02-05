@@ -15,42 +15,48 @@ function AddTradeModal({ isOpen, onClose, onAddTrade }) {
   const [manualPnL, setManualPnL] = useState('');
   const [useManualPnL, setUseManualPnL] = useState(false);
 
+  // Sorted alphabetically
   const forexPairs = [
-    'EUR/USD', 'GBP/USD', 'USD/JPY', 'USD/CHF',
-    'AUD/USD', 'USD/CAD', 'NZD/USD', 'EUR/GBP',
-    'GBP/JPY', 'EUR/JPY', 'AUD/JPY', 'XAU/USD'
+    'AUD/JPY', 'AUD/USD', 'EUR/GBP', 'EUR/JPY', 'EUR/USD',
+    'GBP/JPY', 'GBP/USD', 'NZD/USD', 'USD/CAD', 'USD/CHF',
+    'USD/CNY', 'USD/JPY', 'XAU/USD'
   ];
 
   // Pip size for each pair
   const pipSizes = {
-    'EUR/USD': 0.0001,
-    'GBP/USD': 0.0001,
-    'AUD/USD': 0.0001,
-    'NZD/USD': 0.0001,
-    'USD/JPY': 0.01,
-    'USD/CHF': 0.0001,
-    'USD/CAD': 0.0001,
-    'EUR/GBP': 0.0001,
-    'GBP/JPY': 0.01,
-    'EUR/JPY': 0.01,
     'AUD/JPY': 0.01,
-    'XAU/USD': 0.10, // Gold: 1 pip = $0.10 movement
+    'AUD/USD': 0.0001,
+    'EUR/GBP': 0.0001,
+    'EUR/JPY': 0.01,
+    'EUR/USD': 0.0001,
+    'GBP/JPY': 0.01,
+    'GBP/USD': 0.0001,
+    'NZD/USD': 0.0001,
+    'USD/CAD': 0.0001,
+    'USD/CHF': 0.0001,
+    'USD/CNY': 0.0001,
+    'USD/JPY': 0.01,
+    'XAU/USD': 0.10,
   };
 
   // Pip value per standard lot (100,000 units) in USD
+  // For XXX/USD pairs: $10 per pip
+  // For USD/XXX pairs: $10 / exchange rate (approximate)
+  // For XXX/JPY pairs: ~$6.67 per pip (100,000 / 150 JPY rate)
   const pipValuePerStandardLot = {
-    'EUR/USD': 10,
-    'GBP/USD': 10,
+    'AUD/JPY': 6.67,
     'AUD/USD': 10,
-    'NZD/USD': 10,
-    'USD/JPY': 9.09,
-    'USD/CHF': 10.20,
-    'USD/CAD': 7.69,
     'EUR/GBP': 12.50,
-    'GBP/JPY': 9.09,
-    'EUR/JPY': 9.09,
-    'AUD/JPY': 9.09,
-    'XAU/USD': 10, // Gold: $10 per pip per standard lot (100 oz)
+    'EUR/JPY': 6.67,
+    'EUR/USD': 10,
+    'GBP/JPY': 6.67,
+    'GBP/USD': 10,
+    'NZD/USD': 10,
+    'USD/CAD': 7.35,
+    'USD/CHF': 11.36,
+    'USD/CNY': 1.37,
+    'USD/JPY': 6.67,
+    'XAU/USD': 10,
   };
 
   // Calculate P&L automatically
@@ -148,7 +154,7 @@ function AddTradeModal({ isOpen, onClose, onAddTrade }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay">
       <div className="modal-content add-trade-modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>Add Trade</h2>

@@ -7,29 +7,31 @@ function PositionCalculator() {
   const [stopLossPips, setStopLossPips] = useState('');
   const [pair, setPair] = useState('EUR/USD');
 
+  // Sorted alphabetically
   const forexPairs = [
-    'EUR/USD', 'GBP/USD', 'USD/JPY', 'USD/CHF',
-    'AUD/USD', 'USD/CAD', 'NZD/USD', 'EUR/GBP',
-    'GBP/JPY', 'EUR/JPY', 'AUD/JPY', 'XAU/USD'
+    'AUD/JPY', 'AUD/USD', 'EUR/GBP', 'EUR/JPY', 'EUR/USD',
+    'GBP/JPY', 'GBP/USD', 'NZD/USD', 'USD/CAD', 'USD/CHF',
+    'USD/CNY', 'USD/JPY', 'XAU/USD'
   ];
 
-  // Pip values per standard lot (100,000 units)
-  // For pairs where USD is the quote currency (XXX/USD), 1 pip = $10
-  // For pairs where USD is base currency (USD/XXX), it varies
-  // For JPY pairs, 1 pip = $10 approximately (varies slightly with price)
+  // Pip values per standard lot (100,000 units) in USD
+  // For XXX/USD pairs: $10 per pip
+  // For USD/XXX pairs: $10 / exchange rate (approximate)
+  // For XXX/JPY pairs: ~$6.67 per pip (100,000 / 150 JPY rate)
   const pipValuePerStandardLot = {
-    'EUR/USD': 10,
-    'GBP/USD': 10,
+    'AUD/JPY': 6.67,
     'AUD/USD': 10,
+    'EUR/GBP': 12.50,
+    'EUR/JPY': 6.67,
+    'EUR/USD': 10,
+    'GBP/JPY': 6.67,
+    'GBP/USD': 10,
     'NZD/USD': 10,
-    'USD/JPY': 9.09, // Approximate, varies with price
-    'USD/CHF': 10.20, // Approximate, varies with price
-    'USD/CAD': 7.69, // Approximate, varies with price
-    'EUR/GBP': 12.50, // Approximate
-    'GBP/JPY': 9.09, // Approximate
-    'EUR/JPY': 9.09, // Approximate
-    'AUD/JPY': 9.09, // Approximate
-    'XAU/USD': 10, // Gold
+    'USD/CAD': 7.35,
+    'USD/CHF': 11.36,
+    'USD/CNY': 1.37,
+    'USD/JPY': 6.67,
+    'XAU/USD': 10,
   };
 
   const calculatePosition = () => {

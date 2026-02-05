@@ -118,7 +118,7 @@ function TradeModal({ isOpen, onClose, date, trades, onDeleteTrade, onUpdateTrad
   const totalPnL = trades.reduce((sum, trade) => sum + (trade.pnl || 0), 0);
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay">
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>{dateStr}</h2>

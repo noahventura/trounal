@@ -15,7 +15,10 @@ function Checklist() {
   const [newItem, setNewItem] = useState('');
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [editText, setEditText] = useState('');
   const draggedIndexRef = useRef(null);
+  const editInputRef = useRef(null);
 
   // Subscribe to user's checklist from Firestore
   useEffect(() => {
@@ -58,6 +61,38 @@ function Checklist() {
     } catch (error) {
       console.error('Error deleting item:', error);
     }
+  };
+
+  const startEditing = (item) => {
+    setEditingId(item.id);
+    setEditText(item.text);
+  };
+
+  // Focus input when modal opens
+  useEffect(() => {
+    if (editingId) {
+      setTimeout(() => {
+        editInputRef.current?.focus();
+        editInputRef.current?.select();
+      }, 50);
+    }
+  }, [editingId]);
+
+  const saveEdit = async () => {
+    if (editingId && editText.trim()) {
+      try {
+        await updateChecklistItem(editingId, { text: editText.trim() });
+      } catch (error) {
+        console.error('Error updating item:', error);
+      }
+    }
+    setEditingId(null);
+    setEditText('');
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditText('');
   };
 
   const handleDragStart = (e, index) => {
@@ -167,6 +202,13 @@ function Checklist() {
                 </span>
               </label>
               <button
+                onClick={() => startEditing(item)}
+                className="edit-btn"
+                title="Edit item"
+              >
+                ✎
+              </button>
+              <button
                 onClick={() => deleteItem(item.id)}
                 className="delete-btn"
               >
@@ -176,6 +218,33 @@ function Checklist() {
           ))
         )}
       </div>
+
+      {editingId && (
+        <div className="edit-modal-overlay" onClick={cancelEdit}>
+          <div className="edit-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Edit Item</h3>
+            <textarea
+              ref={editInputRef}
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') cancelEdit();
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  saveEdit();
+                }
+              }}
+              className="edit-modal-textarea"
+              placeholder="Item text..."
+              rows={3}
+            />
+            <div className="edit-modal-buttons">
+              <button onClick={cancelEdit} className="edit-cancel-btn">Cancel</button>
+              <button onClick={saveEdit} className="edit-save-btn">Save</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
