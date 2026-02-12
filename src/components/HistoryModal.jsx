@@ -18,6 +18,18 @@ function HistoryModal({ isOpen, onClose, trades }) {
         case 'pair':
           comparison = (a.pair || '').localeCompare(b.pair || '');
           break;
+        case 'direction':
+          comparison = (a.direction || '').localeCompare(b.direction || '');
+          break;
+        case 'entry':
+          comparison = (parseFloat(a.entry) || 0) - (parseFloat(b.entry) || 0);
+          break;
+        case 'exit':
+          comparison = (parseFloat(a.exit) || 0) - (parseFloat(b.exit) || 0);
+          break;
+        case 'lotSize':
+          comparison = (parseFloat(a.lotSize) || 0) - (parseFloat(b.lotSize) || 0);
+          break;
         case 'pnl':
           comparison = (a.pnl || 0) - (b.pnl || 0);
           break;
@@ -81,10 +93,18 @@ function HistoryModal({ isOpen, onClose, trades }) {
                   <th onClick={() => handleSort('pair')} className="sortable">
                     Pair <span className="sort-icon">{getSortIcon('pair')}</span>
                   </th>
-                  <th>Direction</th>
-                  <th>Entry</th>
-                  <th>Exit</th>
-                  <th>Lots</th>
+                  <th onClick={() => handleSort('direction')} className="sortable">
+                    Direction <span className="sort-icon">{getSortIcon('direction')}</span>
+                  </th>
+                  <th onClick={() => handleSort('entry')} className="sortable">
+                    Entry <span className="sort-icon">{getSortIcon('entry')}</span>
+                  </th>
+                  <th onClick={() => handleSort('exit')} className="sortable">
+                    Exit <span className="sort-icon">{getSortIcon('exit')}</span>
+                  </th>
+                  <th onClick={() => handleSort('lotSize')} className="sortable">
+                    Lots <span className="sort-icon">{getSortIcon('lotSize')}</span>
+                  </th>
                   <th onClick={() => handleSort('pnl')} className="sortable">
                     P&L <span className="sort-icon">{getSortIcon('pnl')}</span>
                   </th>
