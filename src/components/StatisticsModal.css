@@ -177,6 +177,7 @@
   border-radius: 12px;
   padding: 1rem;
   border: 1px solid rgba(71, 85, 105, 0.3);
+  position: relative;
 }
 
 .pnl-chart {
@@ -242,6 +243,43 @@
   color: #64748b;
   padding: 3rem 1rem;
   font-style: italic;
+}
+
+/* Chart Tooltip */
+.chart-tooltip {
+  position: absolute;
+  transform: translate(-50%, -120%);
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(59, 130, 246, 0.5);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  pointer-events: none;
+  z-index: 10;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.tooltip-date {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+}
+
+.tooltip-pnl,
+.tooltip-cumulative {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.tooltip-pnl.profit,
+.tooltip-cumulative.profit {
+  color: #22c55e;
+}
+
+.tooltip-pnl.loss,
+.tooltip-cumulative.loss {
+  color: #ef4444;
 }
 
 /* Mobile responsive */

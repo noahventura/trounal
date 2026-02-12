@@ -204,6 +204,8 @@ function StatisticsModal({ isOpen, onClose, trades }) {
 
 // SVG Chart Component
 function PnLChart({ data }) {
+  const [tooltip, setTooltip] = useState(null);
+
   if (data.length === 0) {
     return <div className="chart-empty">No trades in selected period</div>;
   }
@@ -247,6 +249,16 @@ function PnLChart({ data }) {
     yTicks.push({ value, y: scaleY(value) });
   }
 
+  const handleMouseEnter = (d, i) => {
+    setTooltip({
+      x: (scaleX(i) / width) * 100,
+      y: (scaleY(d.cumulative) / height) * 100,
+      date: d.date.toLocaleDateString(),
+      pnl: d.pnl,
+      cumulative: d.cumulative
+    });
+  };
+
   return (
     <div className="pnl-chart-container">
       <svg viewBox={`0 0 ${width} ${height}`} className="pnl-chart">
@@ -283,11 +295,11 @@ function PnLChart({ data }) {
             key={i}
             cx={scaleX(i)}
             cy={scaleY(d.cumulative)}
-            r="4"
+            r="5"
             className={`data-point ${d.cumulative >= 0 ? 'positive' : 'negative'}`}
-          >
-            <title>{`${d.date.toLocaleDateString()}: ${d.cumulative >= 0 ? '+' : ''}$${d.cumulative.toFixed(2)}`}</title>
-          </circle>
+            onMouseEnter={() => handleMouseEnter(d, i)}
+            onMouseLeave={() => setTooltip(null)}
+          />
         ))}
 
         {/* Y-axis labels */}
@@ -324,6 +336,25 @@ function PnLChart({ data }) {
           </>
         )}
       </svg>
+
+      {/* Custom Tooltip */}
+      {tooltip && (
+        <div
+          className="chart-tooltip"
+          style={{
+            left: `${tooltip.x}%`,
+            top: `${tooltip.y}%`
+          }}
+        >
+          <div className="tooltip-date">{tooltip.date}</div>
+          <div className={`tooltip-pnl ${tooltip.pnl >= 0 ? 'profit' : 'loss'}`}>
+            Trade: {tooltip.pnl >= 0 ? '+' : ''}${tooltip.pnl.toFixed(2)}
+          </div>
+          <div className={`tooltip-cumulative ${tooltip.cumulative >= 0 ? 'profit' : 'loss'}`}>
+            Total: {tooltip.cumulative >= 0 ? '+' : ''}${tooltip.cumulative.toFixed(2)}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
