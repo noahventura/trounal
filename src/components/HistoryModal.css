@@ -1,0 +1,186 @@
+.history-modal {
+  max-width: 900px;
+  width: 95%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.history-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(71, 85, 105, 0.3);
+}
+
+.trade-count {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.no-trades {
+  text-align: center;
+  color: #64748b;
+  padding: 3rem 1rem;
+  font-style: italic;
+}
+
+.history-table-wrapper {
+  overflow-x: auto;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  border-radius: 8px;
+  border: 1px solid rgba(71, 85, 105, 0.3);
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.history-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.history-table th {
+  background: rgba(30, 41, 59, 0.95);
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  padding: 0.875rem 0.75rem;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(71, 85, 105, 0.5);
+}
+
+.history-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.history-table th.sortable:hover {
+  color: #3b82f6;
+}
+
+.sort-icon {
+  margin-left: 0.5rem;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.history-table th.sortable:hover .sort-icon {
+  opacity: 1;
+}
+
+.history-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(71, 85, 105, 0.2);
+  color: #e2e8f0;
+}
+
+.history-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.history-table tbody tr:hover {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.history-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Cell-specific styles */
+.date-cell {
+  white-space: nowrap;
+  color: #cbd5e1;
+}
+
+.pair-cell {
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.direction-cell {
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.direction-cell.long,
+.direction-cell.buy {
+  color: #22c55e;
+}
+
+.direction-cell.short,
+.direction-cell.sell {
+  color: #ef4444;
+}
+
+.price-cell {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.lots-cell {
+  text-align: center;
+  color: #94a3b8;
+}
+
+.pnl-cell {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pnl-cell.profit {
+  color: #22c55e;
+}
+
+.pnl-cell.loss {
+  color: #ef4444;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .history-modal {
+    max-height: 90vh;
+    padding: 1rem;
+  }
+
+  .history-table {
+    font-size: 0.8rem;
+  }
+
+  .history-table th,
+  .history-table td {
+    padding: 0.5rem 0.4rem;
+  }
+
+  .history-table th {
+    font-size: 0.65rem;
+  }
+
+  .price-cell {
+    font-size: 0.75rem;
+  }
+
+  /* Hide less important columns on mobile */
+  .history-table th:nth-child(4),
+  .history-table td:nth-child(4),
+  .history-table th:nth-child(5),
+  .history-table td:nth-child(5),
+  .history-table th:nth-child(6),
+  .history-table td:nth-child(6) {
+    display: none;
+  }
+}

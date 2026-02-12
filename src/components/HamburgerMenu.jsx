@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import './HamburgerMenu.css';
 
-function HamburgerMenu({ onOpenStatistics }) {
+function HamburgerMenu({ onOpenStatistics, onOpenHistory }) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -46,6 +46,16 @@ function HamburgerMenu({ onOpenStatistics }) {
               <path d="M18 20V10M12 20V4M6 20v-6" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             Statistics
+          </button>
+          <button
+            className="menu-item"
+            onClick={() => handleMenuItemClick(onOpenHistory)}
+          >
+            <svg className="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 8v4l3 3" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="12" cy="12" r="9"/>
+            </svg>
+            History
           </button>
         </div>
       )}

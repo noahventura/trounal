@@ -2,7 +2,7 @@ import { useAuth } from '../firebase/AuthContext';
 import HamburgerMenu from './HamburgerMenu';
 import './Header.css';
 
-function Header({ onOpenStatistics }) {
+function Header({ onOpenStatistics, onOpenHistory }) {
   const { currentUser, logout } = useAuth();
 
   const handleLogout = async () => {
@@ -16,7 +16,7 @@ function Header({ onOpenStatistics }) {
   return (
     <header className="header">
       {currentUser && (
-        <HamburgerMenu onOpenStatistics={onOpenStatistics} />
+        <HamburgerMenu onOpenStatistics={onOpenStatistics} onOpenHistory={onOpenHistory} />
       )}
       <h1 className="logo">TROUNAL</h1>
       {currentUser && (
