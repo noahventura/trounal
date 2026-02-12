@@ -1,0 +1,270 @@
+.statistics-modal {
+  max-width: 700px;
+  width: 95%;
+}
+
+.date-filter {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.date-input-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.date-input-group label {
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  padding: 1.25rem;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(71, 85, 105, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.stat-value.profit {
+  color: #22c55e;
+}
+
+.stat-value.loss {
+  color: #ef4444;
+}
+
+/* Extremes section */
+.extremes-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.extreme-card {
+  padding: 1rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.extreme-card.win {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.extreme-card.loss {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.extreme-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.extreme-pair {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.extreme-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.extreme-value.profit {
+  color: #22c55e;
+}
+
+.extreme-value.loss {
+  color: #ef4444;
+}
+
+.extreme-date {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.no-data {
+  color: #64748b;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Pairs section */
+.pairs-section {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 10px;
+  border: 1px solid rgba(71, 85, 105, 0.2);
+}
+
+.pair-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pair-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.pair-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+/* Chart section */
+.chart-section {
+  margin-top: 0.5rem;
+}
+
+.section-title {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pnl-chart-container {
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid rgba(71, 85, 105, 0.3);
+}
+
+.pnl-chart {
+  width: 100%;
+  height: auto;
+}
+
+.grid-line {
+  stroke: rgba(71, 85, 105, 0.3);
+  stroke-dasharray: 4 4;
+}
+
+.zero-line {
+  stroke: rgba(148, 163, 184, 0.5);
+  stroke-width: 1;
+}
+
+.pnl-line {
+  fill: none;
+  stroke: #3b82f6;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.data-point {
+  fill: #3b82f6;
+  cursor: pointer;
+  transition: r 0.2s ease;
+}
+
+.data-point:hover {
+  r: 6;
+}
+
+.data-point.positive {
+  fill: #22c55e;
+}
+
+.data-point.negative {
+  fill: #ef4444;
+}
+
+.axis-label {
+  fill: #64748b;
+  font-size: 11px;
+}
+
+.y-label {
+  text-anchor: end;
+}
+
+.x-label {
+  text-anchor: start;
+}
+
+.x-label.end {
+  text-anchor: end;
+}
+
+.chart-empty {
+  text-align: center;
+  color: #64748b;
+  padding: 3rem 1rem;
+  font-style: italic;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .statistics-modal {
+    padding: 1.5rem;
+  }
+
+  .stats-grid,
+  .extremes-section {
+    grid-template-columns: 1fr;
+  }
+
+  .date-filter {
+    flex-direction: column;
+  }
+
+  .pairs-section {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .stat-value {
+    font-size: 1.25rem;
+  }
+}

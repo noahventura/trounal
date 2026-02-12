@@ -1,7 +1,8 @@
 import { useAuth } from '../firebase/AuthContext';
+import HamburgerMenu from './HamburgerMenu';
 import './Header.css';
 
-function Header() {
+function Header({ onOpenStatistics }) {
   const { currentUser, logout } = useAuth();
 
   const handleLogout = async () => {
@@ -14,6 +15,9 @@ function Header() {
 
   return (
     <header className="header">
+      {currentUser && (
+        <HamburgerMenu onOpenStatistics={onOpenStatistics} />
+      )}
       <h1 className="logo">TROUNAL</h1>
       {currentUser && (
         <div className="user-section">

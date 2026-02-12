@@ -7,6 +7,7 @@ import TradeCalendar from './components/TradeCalendar';
 import PositionCalculator from './components/PositionCalculator';
 import TradeModal from './components/TradeModal';
 import AddTradeModal from './components/AddTradeModal';
+import StatisticsModal from './components/StatisticsModal';
 import FeedbackButton from './components/FeedbackButton';
 import Login from './components/Login';
 import './App.css';
@@ -18,6 +19,7 @@ function App() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDateTrades, setSelectedDateTrades] = useState([]);
   const [addTradeModalOpen, setAddTradeModalOpen] = useState(false);
+  const [statisticsModalOpen, setStatisticsModalOpen] = useState(false);
 
   // Subscribe to user's trades from Firestore
   useEffect(() => {
@@ -92,7 +94,7 @@ function App() {
 
   return (
     <div className="app">
-      <Header />
+      <Header onOpenStatistics={() => setStatisticsModalOpen(true)} />
       <div className="main-container">
         <aside className="sidebar left-sidebar">
           <Checklist />
@@ -119,6 +121,11 @@ function App() {
         isOpen={addTradeModalOpen}
         onClose={() => setAddTradeModalOpen(false)}
         onAddTrade={handleAddTrade}
+      />
+      <StatisticsModal
+        isOpen={statisticsModalOpen}
+        onClose={() => setStatisticsModalOpen(false)}
+        trades={trades}
       />
       <FeedbackButton />
     </div>

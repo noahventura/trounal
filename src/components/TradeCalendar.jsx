@@ -87,9 +87,10 @@ function TradeCalendar({ trades, onDateClick }) {
     setActiveStartDate(today);
   };
 
-  const isToday = value.toDateString() === new Date().toDateString() &&
-    activeStartDate.getMonth() === new Date().getMonth() &&
-    activeStartDate.getFullYear() === new Date().getFullYear();
+  // Show Today button if viewing any month other than current month
+  const now = new Date();
+  const isCurrentMonth = activeStartDate.getMonth() === now.getMonth() &&
+    activeStartDate.getFullYear() === now.getFullYear();
 
   return (
     <div className="trade-calendar-container">
@@ -101,7 +102,7 @@ function TradeCalendar({ trades, onDateClick }) {
         tileContent={tileContent}
         navigationLabel={navigationLabel}
       />
-      {!isToday && (
+      {!isCurrentMonth && (
         <button className="today-btn" onClick={goToToday}>
           Today
         </button>
